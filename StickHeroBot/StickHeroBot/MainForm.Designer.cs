@@ -109,6 +109,7 @@
             this.Controls.Add(this.findWindowButton);
             this.Name = "MainForm";
             this.Text = "StickHeroBot";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

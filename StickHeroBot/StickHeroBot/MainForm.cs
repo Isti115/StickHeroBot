@@ -33,6 +33,11 @@ namespace StickHeroBot
             InitializeComponent();
         }
 
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            findWindowButton_Click(sender, e);
+        }
+
         private void findWindowButton_Click(object sender, EventArgs e)
         {
             Process[] processes = Process.GetProcessesByName("MirrorOp Receiver");
@@ -60,9 +65,9 @@ namespace StickHeroBot
                 b++;
             }
 
-            int x = b;
+            int x = b + 10;
 
-            while (bmp.GetPixel(x, 470).R < 230 || bmp.GetPixel(x, 470).G > 50 || bmp.GetPixel(x, 470).B > 50)
+            while (bmp.GetPixel(x, 470).GetBrightness() != 0) //bmp.GetPixel(x, 470).R < 230 || bmp.GetPixel(x, 470).G > 50 || bmp.GetPixel(x, 470).B > 50)
             {
                 x++;
             }
@@ -77,15 +82,17 @@ namespace StickHeroBot
             //t.Interval = 3 * d; //(int)(2.7 * (float)d);
             //t.Tick += new EventHandler(timer_done);
 
-            Color c = bmp.GetPixel(gb - 2, 490 - d);
+            Color c = bmp.GetPixel(gb, 470 - d);
 
             mouseDown(area.X + 100, area.Y + 100);
 
-            while (bmp.GetPixel(gb - 2, 490 - d) == c)
+            while (bmp.GetPixel(gb, 470 - d) == c)
             {
                 graphics.CopyFromScreen(area.X, area.Y, 0, 0, area.Size);
-                this.Text = bmp.GetPixel(gb - 2, 490 - d).ToString();
+                this.Text = bmp.GetPixel(gb, 470 - d).ToString();
             }
+
+            this.Text = bmp.GetPixel(gb, 470 - d).ToString() + " sajt";
 
             mouseUp();
             //t.Start();
@@ -147,6 +154,5 @@ namespace StickHeroBot
 
             
         }
-
     }
 }
