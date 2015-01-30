@@ -17,7 +17,9 @@ namespace StickHeroBot
     {
         public Rectangle area = new Rectangle();
         Bitmap bmp;
+        Graphics graphics;
 
+        int gb;
         int d;
 
         static Timer t = new Timer();
@@ -37,12 +39,13 @@ namespace StickHeroBot
             Process proc = processes[0];
             IntPtr ptr = proc.MainWindowHandle;
             GetWindowRect(ptr, ref area);
+
+            bmp = new Bitmap(area.Width, area.Height);
+            graphics = Graphics.FromImage(bmp);
         }
 
         private void captureButton_Click(object sender, EventArgs e)
         {
-            bmp = new Bitmap(area.Width, area.Height);
-            Graphics graphics = Graphics.FromImage(bmp);
             graphics.CopyFromScreen(area.X, area.Y, 0, 0, area.Size);
 
             bmp.Save(@"C:\Users\isti\Desktop\test.png", System.Drawing.Imaging.ImageFormat.Png);
@@ -64,22 +67,34 @@ namespace StickHeroBot
                 x++;
             }
 
+            gb = b;
             d = x - b;
             doItButton.Text = d.ToString();
         }
 
         private void doItButton_Click(object sender, EventArgs e)
         {
-            t.Interval = 3 * d; //(int)(2.7 * (float)d);
-            t.Tick += new EventHandler(timer_done);
+            //t.Interval = 3 * d; //(int)(2.7 * (float)d);
+            //t.Tick += new EventHandler(timer_done);
+
+            Color c = bmp.GetPixel(gb - 2, 490 - d);
+
             mouseDown(area.X + 100, area.Y + 100);
-            t.Start();
+
+            while (bmp.GetPixel(gb - 2, 490 - d) == c)
+            {
+                graphics.CopyFromScreen(area.X, area.Y, 0, 0, area.Size);
+                this.Text = bmp.GetPixel(gb - 2, 490 - d).ToString();
+            }
+
+            mouseUp();
+            //t.Start();
         }
 
         private static void timer_done(Object myObject, EventArgs myEventArgs)
         {
-            mouseUp();
-            t.Stop();
+            //mouseUp();
+            //t.Stop();
         }
 
         // copy-pasted window search
